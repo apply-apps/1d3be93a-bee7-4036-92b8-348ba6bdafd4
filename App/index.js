@@ -1,53 +1,102 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// Filename: index.js
+// Combined code from all files
 
-const App = () => {
-  const fullText = 'Hi, this is Apply.\nCreating mobile apps is now as simple as typing text.\nJust input your idea and press APPLY, and our platform does the rest...';
-  const [displayedText, setDisplayedText] = useState('');
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaView, Button, StyleSheet, View, Text, ScrollView } from 'react-native';
 
-  useEffect(() => {
-    if (isPaused) return;
+const Stack = createStackNavigator();
 
-    const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + fullText[index]);
-      setIndex((prev) => {
-        if (prev === fullText.length - 1) {
-          setIsPaused(true);
-          setTimeout(() => {
-            setDisplayedText('');
-            setIndex(0);
-            setIsPaused(false);
-          }, 2000);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [index, isPaused]);
-
+function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{displayedText}</Text>
-    </View>
+    <SafeAreaView style={stylesHomeScreen.container}>
+      <Text style={stylesHomeScreen.title}>Tales for Kids</Text>
+      <View style={stylesHomeScreen.buttonContainer}>
+        <Button title="Tale 1" onPress={() => navigation.navigate('Tale1')} />
+        <Button title="Tale 2" onPress={() => navigation.navigate('Tale2')} />
+        <Button title="Tale 3" onPress={() => navigation.navigate('Tale3')} />
+      </View>
+    </SafeAreaView>
   );
-};
+}
 
-const styles = StyleSheet.create({
+const stylesHomeScreen = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'black',
-    padding: 20,
+    alignItems: 'center',
+    paddingTop: 50,
   },
-  text: {
-    color: 'white',
+  title: {
     fontSize: 24,
-    fontFamily: 'monospace',
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    width: '80%',
+    marginTop: 20,
   },
 });
 
-export default App;
+function Tale1() {
+  return (
+    <SafeAreaView style={stylesTales.container}>
+      <ScrollView>
+        <Text style={stylesTales.title}>The Little Red Riding Hood</Text>
+        <Text style={stylesTales.text}>Once upon a time, there was a little girl who lived in a village near the forest...</Text>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function Tale2() {
+  return (
+    <SafeAreaView style={stylesTales.container}>
+      <ScrollView>
+        <Text style={stylesTales.title}>The Three Little Pigs</Text>
+        <Text style={stylesTales.text}>Once upon a time, there were three little pigs...</Text>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function Tale3() {
+  return (
+    <SafeAreaView style={stylesTales.container}>
+      <ScrollView>
+        <Text style={stylesTales.title}>Jack and the Beanstalk</Text>
+        <Text style={stylesTales.text}>Once upon a time, there was a boy named Jack who lived with his mother...</Text>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const stylesTales = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 16,
+  },
+});
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Tale1" component={Tale1} />
+        <Stack.Screen name="Tale2" component={Tale2} />
+        <Stack.Screen name="Tale3" component={Tale3} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
